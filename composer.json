@@ -1,0 +1,17 @@
+{
+    "name": "amirsasani/reporting-system",
+    "description": "Laravel Reporting System package",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Amirsasani\\ReportingSystem\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Amir Sasani",
+            "email": "sasani.amir.1998@gmail.com"
+        }
+    ],
+    "require": {}
+}
