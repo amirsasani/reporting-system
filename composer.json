@@ -4,7 +4,8 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Amirsasani\\ReportingSystem\\": "src/"
+            "Amirsasani\\ReportingSystem\\": "src/",
+            "Amirsasani\\ReportingSystem\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
