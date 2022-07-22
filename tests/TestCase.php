@@ -9,7 +9,16 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // additional setup
+    }
+
+    protected function user($email = 'old@example.com')
+    {
+        return User::create([
+            'id' => 1,
+            'name' => 'Demo User',
+            'email' => $email,
+            'password' => 'secret',
+        ]);
     }
 
     protected function getPackageProviders($app)
@@ -21,6 +30,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        // perform environment setup
+        include_once __DIR__ . '/../database/migrations/create_users_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_reports_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_report_logs_table.php.stub';
+
+        (new \CreateUsersTable)->up();
+        (new \CreateReportsTable)->up();
+        (new \CreateReportLogsTable)->up();
     }
 }
