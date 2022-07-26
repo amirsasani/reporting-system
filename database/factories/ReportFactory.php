@@ -22,7 +22,7 @@ class ReportFactory extends Factory
             'user_id' => $user->id,
             'user_type' => get_class($user),
             'resource_type' => 'nickname',
-            'details' => json_encode(['resource_id' => 1, 'nickname' => 'somebadword']),
+            'Details' => json_encode(['resource_id' => 1, 'nickname' => 'somebadword']),
             'report_status' => Report::STATUS_PENDING
         ];
     }
