@@ -8,6 +8,7 @@ use Amirsasani\ReportingSystem\Exceptions\UserMustUseHasReportsTraitException;
 use Amirsasani\ReportingSystem\Models\Report;
 use Amirsasani\ReportingSystem\Traits\HasReports;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class ReportSystem
 {
@@ -30,12 +31,20 @@ class ReportSystem
 
     public function new(string $resource_type, Details $details)
     {
-        return $this->user->reports()->create([
-            'user_id' => $this->user->id,
-            'user_type' => get_class($this->user),
-            'resource_type' => $resource_type,
-            'report_status' => Report::STATUS_PENDING,
-            'details' => $details->asJson(),
-        ]);
+        $report = false;
+
+        DB::transaction(function() use(&$report, $resource_type, $details) {
+            $report = $this->user->reports()->create([
+                'user_id' => $this->user->id,
+                'user_type' => get_class($this->user),
+                'resource_type' => $resource_type,
+                'report_status' => Report::STATUS_PENDING,
+                'details' => $details->asJson(),
+            ]);
+
+            $report->reportLog()->create(['user_id' => $this->user->id]);
+        }, 3);
+
+        return $report;
     }
 }
