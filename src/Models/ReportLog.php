@@ -9,6 +9,8 @@ class ReportLog extends Model
 {
     protected $fillable = ['user_id', 'report_id', 'created_at'];
 
+    public const UPDATED_AT = null;
+
     public function user()
     {
         return $this->morphTo();
