@@ -2,6 +2,7 @@
 
 namespace Amirsasani\ReportingSystem\Tests\Unit;
 
+use Amirsasani\ReportingSystem\Details\Contracts\Details;
 use Amirsasani\ReportingSystem\Details\NicknameDetails;
 use Amirsasani\ReportingSystem\Models\Report;
 use Amirsasani\ReportingSystem\ReportSystem;
@@ -33,5 +34,22 @@ class ReportsTest extends TestCase
         $newReport = $reportSystem->new('nickname', $details);
 
         $this->assertDatabaseHas('reports', ['report_status' => Report::STATUS_PENDING]);
+        $this->assertInstanceOf(Report::class, $newReport);
+
+        return $details;
+    }
+
+    /**
+     * @depends test_create_report_with_service
+     */
+    public function test_report_and_report_log_create(Details $details)
+    {
+        $user = User::factory()->create();
+        $reportSystem = new ReportSystem($user);
+
+        $newReport = $reportSystem->new('nickname', $details);
+
+        $this->assertDatabaseHas('report_logs', ['report_id' => $newReport->id]);
+        $this->assertDatabaseCount('report_logs', 1);
     }
 }
