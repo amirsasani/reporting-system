@@ -29,4 +29,9 @@ class Report extends Model
     {
         return $this->morphTo();
     }
+
+    public function reportLog()
+    {
+        return $this->hasMany(ReportLog::class);
+    }
 }
