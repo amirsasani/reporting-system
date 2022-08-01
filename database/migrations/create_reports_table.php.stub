@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->morphs('user');
             $table->string('resource_type');
             $table->json('details');
-            $table->string('report_status');
+            $table->integer('report_status');
             $table->integer('report_count')->default(1);
             $table->timestamps();
 
