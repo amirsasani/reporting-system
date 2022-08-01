@@ -2,12 +2,9 @@
 
 namespace Amirsasani\ReportingSystem\Tests\Unit;
 
-use Amirsasani\ReportingSystem\Details\Contracts\Details;
-use Amirsasani\ReportingSystem\Details\NicknameDetails;
 use Amirsasani\ReportingSystem\Models\Report;
 use Amirsasani\ReportingSystem\ReportSystem;
 use Amirsasani\ReportingSystem\Tests\TestCase;
-use Amirsasani\ReportingSystem\Tests\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ReportsTest extends TestCase
@@ -20,12 +17,11 @@ class ReportsTest extends TestCase
         $this->assertEquals('Fake\User', $report->user_type);
     }
 
-
     public function test_create_report_with_service()
     {
         $details = $this->detailsDataProvider();
 
-        $user = User::factory()->create();
+        $user = $this->user();
         $reportSystem = new ReportSystem($user);
 
         $newReport = $reportSystem->new('nickname', $details);
@@ -36,12 +32,11 @@ class ReportsTest extends TestCase
         return $details;
     }
 
-
     public function test_report_and_report_log_create()
     {
         $details = $this->detailsDataProvider();
 
-        $user = User::factory()->create();
+        $user = $this->user();
         $reportSystem = new ReportSystem($user);
 
         $newReport = $reportSystem->new('nickname', $details);
@@ -50,16 +45,15 @@ class ReportsTest extends TestCase
         $this->assertDatabaseCount('report_logs', 1);
     }
 
-
     public function test_report_count()
     {
         $details = $this->detailsDataProvider();
 
-        $user_1 = User::factory()->create();
+        $user_1 = $this->user();
         $reportSystem = new ReportSystem($user_1);
         $report_1 = $reportSystem->new('nickname', $details);
 
-        $user_2 = User::factory()->create();
+        $user_2 = $this->user();
         $reportSystem = new ReportSystem($user_2);
         $report_2 = $reportSystem->new('nickname', $details);
 
@@ -72,16 +66,5 @@ class ReportsTest extends TestCase
         $this->assertDatabaseHas('reports', ['report_count' => 2]);
         $this->assertDatabaseCount('reports', 1);
         $this->assertDatabaseCount('report_logs', 2);
-    }
-
-    public function detailsDataProvider()
-    {
-        $details = new NicknameDetails();
-        $details->setId(2);
-        $details->setDescription("user's nickname is against rules");
-        $details->setNickname("badusername");
-        $details->setSubject("nickname is not valid");
-
-        return $details;
     }
 }

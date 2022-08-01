@@ -2,6 +2,7 @@
 
 namespace Amirsasani\ReportingSystem\Tests;
 
+use Amirsasani\ReportingSystem\Details\NicknameDetails;
 use Amirsasani\ReportingSystem\ReportingSystemServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
@@ -11,14 +12,20 @@ class TestCase extends \Orchestra\Testbench\TestCase
         parent::setUp();
     }
 
-    protected function user($email = 'old@example.com')
+    protected function user()
     {
-        return User::create([
-            'id' => 1,
-            'name' => 'Demo User',
-            'email' => $email,
-            'password' => 'secret',
-        ]);
+        return User::factory()->create();
+    }
+
+    protected function detailsDataProvider()
+    {
+        $details = new NicknameDetails();
+        $details->setId(2);
+        $details->setDescription("user's nickname is against rules");
+        $details->setNickname("badusername");
+        $details->setSubject("nickname is not valid");
+
+        return $details;
     }
 
     protected function getPackageProviders($app)
