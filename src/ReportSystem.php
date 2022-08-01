@@ -29,21 +29,34 @@ class ReportSystem
         $this->user = $user;
     }
 
+    /**
+     * @param string $resource_type
+     * @param Details $details
+     * @return false|Report
+     */
     public function new(string $resource_type, Details $details)
     {
-        $report = false;
+        // check if report for this resource exists
+        $report = Report::where([
+            ['resource_type', '=', $resource_type],
+            ['details->subject', '=', $details->asArray()['subject']],
+        ])->first();
 
-        DB::transaction(function() use(&$report, $resource_type, $details) {
-            $report = $this->user->reports()->create([
-                'user_id' => $this->user->id,
-                'user_type' => get_class($this->user),
-                'resource_type' => $resource_type,
-                'report_status' => Report::STATUS_PENDING,
-                'details' => $details->asJson(),
-            ]);
+        if(!$report) {
+            DB::transaction(function () use (&$report, $resource_type, $details) {
+                $report = $this->user->reports()->create([
+                    'user_id' => $this->user->id,
+                    'user_type' => get_class($this->user),
+                    'resource_type' => $resource_type,
+                    'report_status' => Report::STATUS_PENDING,
+                    'details' => $details->asJson(),
+                ]);
+            }, 3);
+        }else{
+            $report->update(['report_count' => DB::raw('report_count + 1')]);
+        }
 
-            $report->reportLog()->create(['user_id' => $this->user->id]);
-        }, 3);
+        $report->reportLog()->create(['user_id' => $this->user->id]);
 
         return $report;
     }
