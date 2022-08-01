@@ -39,20 +39,20 @@ class ReportSystem
         // check if report for this resource exists
         $report = Report::where([
             ['resource_type', '=', $resource_type],
-            ['details->id', '=', $details->asArray()['id']],
+            ['details->id', $details->asArray()['id']]
         ])->first();
 
-        if(!$report) {
+        if (!$report) {
             DB::transaction(function () use (&$report, $resource_type, $details) {
                 $report = $this->user->reports()->create([
                     'user_id' => $this->user->id,
                     'user_type' => get_class($this->user),
                     'resource_type' => $resource_type,
                     'report_status' => Report::STATUS_PENDING,
-                    'details' => $details->asJson(),
+                    'details' => $details->asArray(),
                 ]);
             }, 3);
-        }else{
+        } else {
             $report->update(['report_count' => DB::raw('report_count + 1')]);
         }
 
