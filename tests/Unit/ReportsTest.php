@@ -50,6 +50,30 @@ class ReportsTest extends TestCase
         $this->assertDatabaseCount('report_logs', 1);
     }
 
+    /**
+     * @dataProvider detailsDataProvider
+     */
+    public function test_report_count(Details $details)
+    {
+        $user_1 = User::factory()->create();
+        $reportSystem = new ReportSystem($user_1);
+        $report_1 = $reportSystem->new('nickname', $details);
+
+        $user_2 = User::factory()->create();
+        $reportSystem = new ReportSystem($user_2);
+        $report_2 = $reportSystem->new('nickname', $details);
+
+
+        /*
+         * reports table should have 1 record and the report_count should be 2
+         * because we have two reports with same details (same resource) from two users
+         * and the report_logs should have 2 records
+         */
+        $this->assertDatabaseHas('reports', ['report_count' => 2]);
+        $this->assertDatabaseCount('reports', 1);
+        $this->assertDatabaseCount('report_logs', 2);
+    }
+
     public function detailsDataProvider()
     {
         $details = new NicknameDetails();
