@@ -20,11 +20,11 @@ class ReportsTest extends TestCase
         $this->assertEquals('Fake\User', $report->user_type);
     }
 
-    /**
-     * @dataProvider detailsDataProvider
-     */
-    public function test_create_report_with_service(Details $details)
+
+    public function test_create_report_with_service()
     {
+        $details = $this->detailsDataProvider();
+
         $user = User::factory()->create();
         $reportSystem = new ReportSystem($user);
 
@@ -36,11 +36,11 @@ class ReportsTest extends TestCase
         return $details;
     }
 
-    /**
-     * @dataProvider detailsDataProvider
-     */
-    public function test_report_and_report_log_create(Details $details)
+
+    public function test_report_and_report_log_create()
     {
+        $details = $this->detailsDataProvider();
+
         $user = User::factory()->create();
         $reportSystem = new ReportSystem($user);
 
@@ -50,11 +50,11 @@ class ReportsTest extends TestCase
         $this->assertDatabaseCount('report_logs', 1);
     }
 
-    /**
-     * @dataProvider detailsDataProvider
-     */
-    public function test_report_count(Details $details)
+
+    public function test_report_count()
     {
+        $details = $this->detailsDataProvider();
+
         $user_1 = User::factory()->create();
         $reportSystem = new ReportSystem($user_1);
         $report_1 = $reportSystem->new('nickname', $details);
