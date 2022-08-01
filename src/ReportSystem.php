@@ -39,7 +39,7 @@ class ReportSystem
         // check if report for this resource exists
         $report = Report::where([
             ['resource_type', '=', $resource_type],
-            ['details->subject', '=', $details->asArray()['subject']],
+            ['details->id', '=', $details->asArray()['id']],
         ])->first();
 
         if(!$report) {
