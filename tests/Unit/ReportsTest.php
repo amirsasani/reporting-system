@@ -20,16 +20,13 @@ class ReportsTest extends TestCase
         $this->assertEquals('Fake\User', $report->user_type);
     }
 
-    public function test_create_report_with_service()
+    /**
+     * @dataProvider detailsDataProvider
+     */
+    public function test_create_report_with_service(Details $details)
     {
         $user = User::factory()->create();
         $reportSystem = new ReportSystem($user);
-
-        $details = new NicknameDetails();
-        $details->setId(2);
-        $details->setDescription("user's nickname is against rules");
-        $details->setNickname("badusername");
-        $details->setSubject("nickname is not valid");
 
         $newReport = $reportSystem->new('nickname', $details);
 
@@ -40,7 +37,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * @depends test_create_report_with_service
+     * @dataProvider detailsDataProvider
      */
     public function test_report_and_report_log_create(Details $details)
     {
@@ -51,5 +48,16 @@ class ReportsTest extends TestCase
 
         $this->assertDatabaseHas('report_logs', ['report_id' => $newReport->id]);
         $this->assertDatabaseCount('report_logs', 1);
+    }
+
+    public function detailsDataProvider()
+    {
+        $details = new NicknameDetails();
+        $details->setId(2);
+        $details->setDescription("user's nickname is against rules");
+        $details->setNickname("badusername");
+        $details->setSubject("nickname is not valid");
+
+        return $details;
     }
 }
