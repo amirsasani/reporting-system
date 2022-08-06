@@ -31,24 +31,24 @@ class ReportSystem
     }
 
     /**
-     * @param string $resource_type
+     * @param string $resourceType
      * @param Details $details
      * @return false|Report
      */
-    public function new(string $resource_type, Details $details)
+    public function new(string $resourceType, Details $details)
     {
         // check if report for this resource exists
         $report = Report::where([
-            ['resource_type', '=', $resource_type],
+            ['resource_type', '=', $resourceType],
             ['details->id', $details->asArray()['id']]
         ])->first();
 
         if (!$report) {
-            DB::transaction(function () use (&$report, $resource_type, $details) {
+            DB::transaction(function () use (&$report, $resourceType, $details) {
                 $report = $this->user->reports()->create([
                     'user_id' => $this->user->id,
                     'user_type' => get_class($this->user),
-                    'resource_type' => $resource_type,
+                    'resource_type' => $resourceType,
                     'report_status' => Report::STATUS_PENDING,
                     'details' => $details->asArray(),
                 ]);
