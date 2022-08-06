@@ -40,9 +40,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
         include_once __DIR__ . '/../database/migrations/create_users_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_reports_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_report_logs_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_blacklist_table.php.stub';
 
         (new \CreateUsersTable)->up();
         (new \CreateReportsTable)->up();
         (new \CreateReportLogsTable)->up();
+        (new \CreateBlacklistsTable)->up();
     }
 }
