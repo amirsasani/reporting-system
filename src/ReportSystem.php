@@ -5,6 +5,7 @@ namespace Amirsasani\ReportingSystem;
 
 use Amirsasani\ReportingSystem\Details\Contracts\Details;
 use Amirsasani\ReportingSystem\Exceptions\UserMustUseHasReportsTraitException;
+use Amirsasani\ReportingSystem\Models\Blacklist;
 use Amirsasani\ReportingSystem\Models\Report;
 use Amirsasani\ReportingSystem\Traits\HasReports;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -59,5 +60,15 @@ class ReportSystem
         $report->reportLog()->create(['user_id' => $this->user->id]);
 
         return $report;
+    }
+
+    public static function addToBlacklist(string $name, string $type = null)
+    {
+        return Blacklist::create(compact('name', 'type'));
+    }
+
+    public static function removeFromBlacklist(int $id)
+    {
+        Blacklist::destroy($id);
     }
 }
